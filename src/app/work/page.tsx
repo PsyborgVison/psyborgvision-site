@@ -30,6 +30,7 @@ export default function WorkPage() {
           >
             <span className="font-mono text-xs text-text-dim">
               // {project.year} · {project.client}
+              {project.status === "managed" ? " · Live & managed" : ""}
             </span>
             <h2 className="text-base font-medium text-text group-hover:text-accent transition-colors">
               {project.title}

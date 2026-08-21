@@ -40,6 +40,7 @@ export default async function WorkDetailPage(props: {
 
       <span className="font-mono text-xs text-text-dim">
         // {project.year} · {project.client}
+        {project.status === "managed" ? " · Live & managed" : ""}
       </span>
       <h1 className="text-3xl font-medium text-text mt-2 mb-4 tracking-tight">
         {project.title}
@@ -47,6 +48,16 @@ export default async function WorkDetailPage(props: {
       <p className="text-text-2 text-lg mb-6 leading-relaxed max-w-2xl">
         {project.summary}
       </p>
+      {project.url ? (
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mb-6 text-sm text-accent hover:text-accent-dim transition-colors font-mono"
+        >
+          Visit site →
+        </a>
+      ) : null}
 
       <div className="flex flex-wrap gap-2 mb-14">
         {project.tags.map((tag) => (
