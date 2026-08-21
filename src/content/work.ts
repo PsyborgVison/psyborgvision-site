@@ -31,11 +31,13 @@ export const projects: WorkProject[] = [
     title: "Sunnyside E-Bikes",
     year: "2025",
     client: "Sunnyside E-Bikes",
-    summary: "Site for Sunnyside E-Bikes.",
-    tags: ["Next.js", "TypeScript", "Tailwind"],
+    summary:
+      "Rental and tour site for a premium e-bike shop on Big Bear Lake's north shore, with rates, guided tours, and online booking.",
+    tags: ["WordPress", "Booking"],
     featured: true,
     url: "https://sunnysideebikes.com",
     status: "managed",
+    body: "Site for Sunnyside E-Bikes, a rental and guided-tour shop at 39122 North Shore Dr in Fawnskin, CA, on Big Bear Lake's quieter north shore. Riders can browse the fleet of front and full-suspension e-bikes (fat off-road tires, powerful pedal-assist/full-electric modes, disc brakes), book rentals and guided sunset/trail tours online, check hours and rates, and read local trail guides for Fawnskin. Built on WordPress and actively managed with ongoing updates to hours, rates, and seasonal promos.",
   },
 ];
 
