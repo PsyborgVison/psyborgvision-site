@@ -48,6 +48,11 @@ export default function WorkPage() {
                 </span>
               ))}
             </div>
+            {project.channels && project.channels.length > 0 ? (
+              <span className="font-mono text-xs text-text-dim">
+                {project.channels.length} channels managed
+              </span>
+            ) : null}
           </Link>
         ))}
       </div>

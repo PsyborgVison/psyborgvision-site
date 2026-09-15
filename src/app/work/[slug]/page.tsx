@@ -70,6 +70,36 @@ export default async function WorkDetailPage(props: {
         ))}
       </div>
 
+      {project.channels && project.channels.length > 0 ? (
+        <div className="mb-14">
+          <p className="font-mono text-xs text-text-dim mb-3">
+            // what I manage · {project.channels.length} channels
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {project.channels.map((channel) =>
+              channel.url ? (
+                <a
+                  key={channel.label}
+                  href={channel.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs text-text-2 border border-border px-2 py-1 rounded-sm hover:border-border-strong hover:text-accent transition-colors"
+                >
+                  {channel.label}
+                </a>
+              ) : (
+                <span
+                  key={channel.label}
+                  className="font-mono text-xs text-text-dim border border-border px-2 py-1 rounded-sm"
+                >
+                  {channel.label}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+      ) : null}
+
       {project.body ? (
         <div className="prose prose-invert max-w-2xl text-text-2 leading-relaxed">
           <p>{project.body}</p>
