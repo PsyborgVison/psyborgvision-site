@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { projects } from "@/content/work";
+import { PILOT_PITCH, projects } from "@/content/work";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -26,8 +27,20 @@ export default function WorkPage() {
           <Link
             key={project.slug}
             href={`/work/${project.slug}`}
-            className="bg-surface border border-border rounded-sm p-6 flex flex-col gap-3 hover:border-border-strong transition-colors group"
+            className="bg-surface border border-border rounded-sm overflow-hidden flex flex-col gap-3 hover:border-border-strong transition-colors group"
           >
+            {project.thumbnail ? (
+              <div className="relative w-full aspect-[16/10] bg-bg">
+                <Image
+                  src={project.thumbnail}
+                  alt={`${project.title} preview`}
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+              </div>
+            ) : null}
+            <div className="p-6 pt-3 flex flex-col gap-3 flex-1">
             <span className="font-mono text-xs text-text-dim">
               // {project.year} · {project.client}
               {project.status === "managed" ? " · Live & managed" : ""}
@@ -53,8 +66,19 @@ export default function WorkPage() {
                 {project.channels.length} channels managed
               </span>
             ) : null}
+            </div>
           </Link>
         ))}
+      </div>
+
+      {/* Pilot pitch */}
+      <div className="mt-14 bg-surface border border-accent/30 rounded-sm p-6">
+        <p className="font-mono text-xs text-accent tracking-wide mb-2">
+          // taking on new local clients
+        </p>
+        <p className="text-text-2 text-sm leading-relaxed max-w-2xl">
+          {PILOT_PITCH}
+        </p>
       </div>
 
       {/* CTA */}

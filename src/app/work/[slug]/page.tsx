@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, projects } from "@/content/work";
@@ -57,6 +58,25 @@ export default async function WorkDetailPage(props: {
         >
           Visit site →
         </a>
+      ) : null}
+
+      {project.images && project.images.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-14">
+          {project.images.map((image) => (
+            <div
+              key={image.src}
+              className="relative aspect-[4/3] rounded-sm overflow-hidden border border-border bg-surface"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                sizes="(min-width: 640px) 33vw, 100vw"
+              />
+            </div>
+          ))}
+        </div>
       ) : null}
 
       <div className="flex flex-wrap gap-2 mb-14">
