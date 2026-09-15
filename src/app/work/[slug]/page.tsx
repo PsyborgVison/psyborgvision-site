@@ -40,6 +40,7 @@ export default async function WorkDetailPage(props: {
 
       <span className="font-mono text-xs text-text-dim">
         // {project.year} · {project.client}
+        {project.status === "managed" ? " · Live & managed" : ""}
       </span>
       <h1 className="text-3xl font-medium text-text mt-2 mb-4 tracking-tight">
         {project.title}
@@ -47,6 +48,16 @@ export default async function WorkDetailPage(props: {
       <p className="text-text-2 text-lg mb-6 leading-relaxed max-w-2xl">
         {project.summary}
       </p>
+      {project.url ? (
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mb-6 text-sm text-accent hover:text-accent-dim transition-colors font-mono"
+        >
+          Visit site →
+        </a>
+      ) : null}
 
       <div className="flex flex-wrap gap-2 mb-14">
         {project.tags.map((tag) => (
@@ -58,6 +69,36 @@ export default async function WorkDetailPage(props: {
           </span>
         ))}
       </div>
+
+      {project.channels && project.channels.length > 0 ? (
+        <div className="mb-14">
+          <p className="font-mono text-xs text-text-dim mb-3">
+            // what I manage · {project.channels.length} channels
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {project.channels.map((channel) =>
+              channel.url ? (
+                <a
+                  key={channel.label}
+                  href={channel.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs text-text-2 border border-border px-2 py-1 rounded-sm hover:border-border-strong hover:text-accent transition-colors"
+                >
+                  {channel.label}
+                </a>
+              ) : (
+                <span
+                  key={channel.label}
+                  className="font-mono text-xs text-text-dim border border-border px-2 py-1 rounded-sm"
+                >
+                  {channel.label}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+      ) : null}
 
       {project.body ? (
         <div className="prose prose-invert max-w-2xl text-text-2 leading-relaxed">

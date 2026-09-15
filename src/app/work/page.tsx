@@ -30,6 +30,7 @@ export default function WorkPage() {
           >
             <span className="font-mono text-xs text-text-dim">
               // {project.year} · {project.client}
+              {project.status === "managed" ? " · Live & managed" : ""}
             </span>
             <h2 className="text-base font-medium text-text group-hover:text-accent transition-colors">
               {project.title}
@@ -47,6 +48,11 @@ export default function WorkPage() {
                 </span>
               ))}
             </div>
+            {project.channels && project.channels.length > 0 ? (
+              <span className="font-mono text-xs text-text-dim">
+                {project.channels.length} channels managed
+              </span>
+            ) : null}
           </Link>
         ))}
       </div>
