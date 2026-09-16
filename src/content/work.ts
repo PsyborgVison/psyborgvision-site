@@ -128,7 +128,7 @@ export const projects: WorkProject[] = [
       { label: "Website (in progress)" },
       {
         label: "Instagram",
-        url: "https://www.instagram.com/captainjohnsmarina/",
+        url: "https://www.instagram.com/captainjohnsfawnskin/",
       },
       {
         label: "Facebook",
