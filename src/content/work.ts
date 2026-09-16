@@ -8,6 +8,22 @@ export type WorkImage = {
   alt: string;
 };
 
+export type ScreenshotPair = {
+  label: string;
+  desktop: string;
+  mobile: string;
+};
+
+export type CaseStudySection = {
+  heading: string;
+  body: string;
+};
+
+export type WireframeBlock = {
+  label: string;
+  note: string;
+};
+
 export type WorkProject = {
   slug: string;
   title: string;
@@ -16,12 +32,28 @@ export type WorkProject = {
   summary: string;
   tags: string[];
   featured: boolean;
+  /** Card thumbnail on /work — should read as brand + place, not a raw UI screenshot. */
   thumbnail?: string;
+  logo?: string;
+  backdrop?: string;
   body?: string;
   url?: string;
   status?: "managed" | "in-progress";
   channels?: Channel[];
   images?: WorkImage[];
+  /** Real desktop/mobile screenshot pairs, only used when we actually captured them. */
+  screenshots?: ScreenshotPair[];
+  /** Whether screenshots are pixel-accurate captures vs. photography standing in for them. */
+  screenshotsAreLive?: boolean;
+  caseStudy?: CaseStudySection[];
+  /**
+   * Set when the case study is written from what's observable on the live
+   * site rather than from the actual build decisions — keeps us honest about
+   * which write-ups are inside knowledge and which are informed reading.
+   */
+  caseStudyIsObserved?: boolean;
+  /** For not-yet-built sites: planned page structure shown as a labeled wireframe instead of screenshots. */
+  wireframe?: WireframeBlock[];
 };
 
 export const projects: WorkProject[] = [
@@ -36,8 +68,22 @@ export const projects: WorkProject[] = [
     featured: true,
     url: "https://bm29foods.com",
     status: "managed",
-    thumbnail: "/work/bm-foods/current-desert-stand.jpg",
-    body: "Marketing and ordering site for a family-run food stand — breakfast burritos, loaded fries, pastrami sandwiches, and fresh squeezed lemonade. Built with Next.js and Tailwind: full menu with order-ahead and Square checkout, local SEO (Restaurant schema, hours, service area), customer reviews, and an Instagram strip. B&M runs a seasonal circuit — Twentynine Palms farmers markets September–April, back on Big Bear Lake's north shore around spring — and the site's hours, address, and structured data all update with it. Actively managed with ongoing content, photo, and schedule updates.",
+    logo: "/work/bm-foods/logo.png",
+    backdrop: "/work/bm-foods/backdrop.jpg",
+    thumbnail: "/work/bm-foods/backdrop.jpg",
+    screenshotsAreLive: true,
+    screenshots: [
+      {
+        label: "Home",
+        desktop: "/work/bm-foods/shots/home-desktop.jpg",
+        mobile: "/work/bm-foods/shots/home-mobile.jpg",
+      },
+      {
+        label: "Menu",
+        desktop: "/work/bm-foods/shots/menu-desktop.jpg",
+        mobile: "/work/bm-foods/shots/menu-mobile.jpg",
+      },
+    ],
     channels: [
       { label: "Website" },
       { label: "Instagram", url: "https://www.instagram.com/bm29foodz" },
@@ -54,18 +100,26 @@ export const projects: WorkProject[] = [
         url: "https://nextdoor.com/pages/bm-foods-fawnskin-ca",
       },
     ],
-    images: [
+    caseStudy: [
       {
-        src: "/work/bm-foods/current-desert-stand.jpg",
-        alt: "B&M Foods winter menu board at the Twentynine Palms farmers market",
+        heading: "The brief",
+        body: "B&M is a family-run food stand, not a restaurant with a fixed address — where they trade changes by season and sometimes by week. The site had to sell the food first, but it also had to be honest about a moving target: wrong hours or a stale address is worse than no site at all for a stand people are trying to physically find.",
       },
       {
-        src: "/work/bm-foods/big-bear-lake-season.jpg",
-        alt: "B&M Foods stand at Grays Hook Line 'n' Dine on Big Bear Lake",
+        heading: "Built around 'where are we this week', not a static address",
+        body: "Hours, address, and trading days all read from one data source (a TradingSlot list with an expiry date on every entry) instead of being typed into each page. When B&M's season changed — down to Twentynine Palms for the winter, back to Big Bear Lake in spring — that's a data edit, not a rewrite of nine different pages. Anything that's lapsed simply stops rendering instead of quietly going stale.",
       },
       {
-        src: "/work/bm-foods/menu-breakfast-burrito.jpg",
-        alt: "B&M Foods breakfast burrito",
+        heading: "Header and hero: sell the food, prove you're open",
+        body: "The top bar leads with days/hours and the exact address before anything else — that's the first thing someone standing in a parking lot needs. The hero photo is the stand itself, not stock imagery, with the tagline doing double duty ('wherever we're parked this week') so it stays true across the seasonal move without editing copy every time.",
+      },
+      {
+        heading: "Menu page as the real landing page",
+        body: "Food photography is B&M's strongest asset, so the menu page is built to be shared directly — each item gets its own real photo, not a generic icon or a PDF scan of a paper menu (which is what a lot of small food stands ship with). Order-ahead is wired in but gates itself off automatically when there's no active venue taking orders, so it can never advertise a pickup that doesn't exist.",
+      },
+      {
+        heading: "SEO and social built for local discovery",
+        body: "Restaurant structured data (schema.org), a Google Business listing, and consistent handles across Instagram, Facebook, TikTok, YouTube, Nextdoor, and more all point back at one business identity — the kind of signal Google actually uses to answer 'food near me' searches, which matters more for a stand with no storefront than for almost any other kind of business.",
       },
     ],
   },
@@ -80,9 +134,27 @@ export const projects: WorkProject[] = [
     featured: true,
     url: "https://sunnysideebikes.com",
     status: "managed",
+    logo: "https://sunnysideebikes.com/wp-content/uploads/2026/03/SunnySideLogoBlack.png",
+    backdrop:
+      "https://sunnysideebikes.com/wp-content/uploads/2025/11/sunset-shootout-view_mp4_dvd.original.jpg",
     thumbnail:
-      "https://sunnysideebikes.com/wp-content/uploads/2026/08/Kingbull_EX-Titan.webp",
-    body: "Site for Sunnyside E-Bikes, a rental and guided-tour shop at 39122 North Shore Dr in Fawnskin, CA, on Big Bear Lake's quieter north shore. Riders can browse the fleet of front and full-suspension e-bikes (fat off-road tires, powerful pedal-assist/full-electric modes, disc brakes), book rentals and guided sunset/trail tours online, check hours and rates, and read local trail guides for Fawnskin. Built on WordPress and actively managed with ongoing updates to hours, rates, and seasonal promos.",
+      "https://sunnysideebikes.com/wp-content/uploads/2025/11/sunset-shootout-view_mp4_dvd.original.jpg",
+    screenshotsAreLive: false,
+    caseStudyIsObserved: true,
+    images: [
+      {
+        src: "https://sunnysideebikes.com/wp-content/uploads/2026/08/Kingbull_EX-Titan.webp",
+        alt: "Sunnyside E-Bikes Kingbull EX-Titan rental bike",
+      },
+      {
+        src: "https://sunnysideebikes.com/wp-content/uploads/2026/08/Ranger.webp",
+        alt: "Sunnyside E-Bikes Ranger rental bike",
+      },
+      {
+        src: "https://sunnysideebikes.com/wp-content/uploads/2025/11/sunset-shootout-view_mp4_dvd.original.jpg",
+        alt: "Sunset lake view from a Sunnyside E-Bikes guided tour",
+      },
+    ],
     channels: [
       { label: "Website" },
       {
@@ -98,18 +170,22 @@ export const projects: WorkProject[] = [
         url: "https://www.yelp.com/biz/sunnyside-e-bikes-fawnskin",
       },
     ],
-    images: [
+    caseStudy: [
       {
-        src: "https://sunnysideebikes.com/wp-content/uploads/2026/08/Kingbull_EX-Titan.webp",
-        alt: "Sunnyside E-Bikes Kingbull EX-Titan rental bike",
+        heading: "What the site is selling",
+        body: "Sunnyside rents premium e-bikes and runs guided tours out of Fawnskin — an impulse, same-day booking business as much as a considered one. The site leads with a full-bleed video hero and a same-day-hours badge right up top, which reads as a deliberate choice for a rental shop: the visitor deciding right now whether it's worth the drive needs 'are you open' answered before anything else.",
       },
       {
-        src: "https://sunnysideebikes.com/wp-content/uploads/2026/08/Ranger.webp",
-        alt: "Sunnyside E-Bikes Ranger rental bike",
+        heading: "Product pages that sell the fleet, not just 'e-bikes'",
+        body: "Each bike model (Kingbull EX-Titan, Ranger, and others) gets its own real photo rather than one generic 'rent an e-bike' block — closer to how a bike shop's own showroom works than a typical service-page template. That's worth more for conversion here than for most local-service sites, since the bike itself is the differentiator between Sunnyside and a cheaper rental down the road.",
       },
       {
-        src: "https://sunnysideebikes.com/wp-content/uploads/2025/11/sunset-shootout-view_mp4_dvd.original.jpg",
-        alt: "Sunset lake view from a Sunnyside E-Bikes guided tour",
+        heading: "Content built around the destination, not just the shop",
+        body: "A dedicated 'Explore Fawnskin' page and trail guides sell the ride, not just the bike — reasonable for a location people are choosing partly for the scenery. Guided sunset tours get their own page separate from plain rentals, which reads as a real upsell path rather than a checkbox add-on.",
+      },
+      {
+        heading: "Where I'd push next",
+        body: "This read is from what's live on the site, not from the original build decisions. The obvious next win is consolidating the scattered social presence (an old @sunnysidebikes handle alongside the current one, a couple of near-duplicate Facebook pages) the same way I did for B&M — right now that's splitting the reviews and follower count Google actually uses for local ranking.",
       },
     ],
   },
@@ -138,6 +214,22 @@ export const projects: WorkProject[] = [
         label: "Yelp",
         url: "https://www.yelp.com/biz/captain-johns-fawn-harbor-and-marina-fawnskin",
       },
+    ],
+    caseStudy: [
+      {
+        heading: "The plan",
+        body: "Captain John's has 20+ years of real reputation on the lake but a fractured web presence — an old marina site, several near-duplicate Facebook pages, and no unified booking path. The new build at captainjohnsfawnskin.com consolidates that into one current site, with social management to match names and links across every channel.",
+      },
+      {
+        heading: "Planned structure",
+        body: "A homepage built around 'book a boat today' as the primary action, a fleet/rates page (boats, kayaks, paddleboards, pontoons), a guided-tours page for the lake tours specifically, and a hours/location page — the same pattern that's already working for Sunnyside next door on the same shoreline.",
+      },
+    ],
+    wireframe: [
+      { label: "Home", note: "Hero, today's hours, primary booking CTA" },
+      { label: "Fleet & Rates", note: "Boats, kayaks, paddleboards, pontoons" },
+      { label: "Guided Tours", note: "Lake history tours, booking" },
+      { label: "Hours & Location", note: "Map, contact, seasonal hours" },
     ],
   },
 ];
