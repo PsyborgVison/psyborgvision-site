@@ -212,7 +212,7 @@ export const projects: WorkProject[] = [
       { label: "Instagram", url: "https://www.instagram.com/sunnysidebikes/" },
       {
         label: "Facebook",
-        url: "https://www.facebook.com/SunnysideEBikes/",
+        url: "https://www.facebook.com/profile.php?id=61594506570636",
         note: "Run through PsyborgVision's Meta Business Suite",
       },
       { label: "TikTok", url: "https://www.tiktok.com/@sunnysidebikes" },
@@ -225,7 +225,7 @@ export const projects: WorkProject[] = [
       { label: "Bing Places" },
       { label: "Apple Maps" },
       { label: "X", url: "https://x.com/sunnysidebikes" },
-      { label: "Snapchat" },
+      { label: "Snapchat", url: "https://www.snapchat.com/add/sunnysidebikes" },
       {
         label: "Pinterest",
         url: "https://www.pinterest.com/sunnysidebikes/",
