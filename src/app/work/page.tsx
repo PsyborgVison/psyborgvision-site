@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
-import { PILOT_PITCH, projects } from "@/content/work";
+import { PILOT_PITCH, activeChannels, projects } from "@/content/work";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -100,7 +100,7 @@ export default function WorkPage() {
               <div className="flex items-center justify-between pt-1">
                 {project.channels && project.channels.length > 0 ? (
                   <span className="font-mono text-xs text-text-dim">
-                    {project.channels.length} channels managed
+                    {activeChannels(project).length} channels managed
                   </span>
                 ) : (
                   <span />

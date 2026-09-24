@@ -2,7 +2,46 @@ import type { Metadata } from "next";
 import SmartImage from "@/components/SmartImage";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProjectBySlug, projects } from "@/content/work";
+import {
+  activeChannels,
+  getProjectBySlug,
+  projects,
+  type Channel,
+} from "@/content/work";
+
+function ChannelChip({ channel }: { channel: Channel }) {
+  const upcoming = Boolean(channel.status);
+  const chipClass = upcoming
+    ? "font-mono text-xs text-text-dim border border-dashed border-border-strong px-2 py-1 rounded-sm"
+    : "font-mono text-xs text-text-2 border border-border px-2 py-1 rounded-sm";
+
+  // Upcoming channels carry their note inside the chip; active ones get a
+  // marker, with the note spelled out beneath the row.
+  const label = upcoming && channel.note ? (
+    <>
+      {channel.label}
+      <span className="text-text-dim"> · {channel.note}</span>
+    </>
+  ) : (
+    <>
+      {channel.label}
+      {channel.note ? <span className="text-accent">*</span> : null}
+    </>
+  );
+
+  return channel.url ? (
+    <a
+      href={channel.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${chipClass} hover:border-border-strong hover:text-accent transition-colors`}
+    >
+      {label}
+    </a>
+  ) : (
+    <span className={chipClass}>{label}</span>
+  );
+}
 
 export async function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -90,7 +129,7 @@ export default async function WorkDetailPage(props: {
             rel="noopener noreferrer"
             className="inline-block mb-6 text-sm text-accent hover:text-accent-dim transition-colors font-mono"
           >
-            Visit site →
+            {project.urlLabel ?? "Visit site"} →
           </a>
         ) : null}
 
@@ -104,6 +143,45 @@ export default async function WorkDetailPage(props: {
             </span>
           ))}
         </div>
+
+        {/* Channels: what I run today, then what's coming */}
+        {project.channels && project.channels.length > 0 ? (
+          <div className="mb-16 bg-surface border border-border rounded-md p-6">
+            <p className="font-mono text-xs text-text-dim mb-4">
+              // what I manage · {activeChannels(project).length} channels
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {activeChannels(project).map((channel) => (
+                <ChannelChip key={channel.label} channel={channel} />
+              ))}
+            </div>
+            {activeChannels(project)
+              .filter((c) => c.note)
+              .map((c) => (
+                <p
+                  key={c.label}
+                  className="font-mono text-[11px] text-text-dim mt-3"
+                >
+                  <span className="text-accent">*</span> {c.label}:{" "}
+                  {c.note}
+                </p>
+              ))}
+            {project.channels.some((c) => c.status) ? (
+              <>
+                <p className="font-mono text-xs text-text-dim mt-6 mb-3">
+                  // coming next
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {project.channels
+                    .filter((c) => c.status)
+                    .map((channel) => (
+                      <ChannelChip key={channel.label} channel={channel} />
+                    ))}
+                </div>
+              </>
+            ) : null}
+          </div>
+        ) : null}
 
         {/* Desktop / mobile screenshot comparisons */}
         {project.screenshots && project.screenshots.length > 0 ? (
@@ -165,15 +243,47 @@ export default async function WorkDetailPage(props: {
           </div>
         ) : null}
 
-        {/* Photography gallery, for projects without live screenshots */}
+        {/* Footage: short muted drone loops */}
+        {project.videos && project.videos.length > 0 ? (
+          <div className="mb-16">
+            <p className="font-mono text-xs text-text-dim mb-1">
+              // footage
+            </p>
+            <p className="text-text-muted text-sm mb-6">
+              Drone footage shot for the brand and cut vertical for social.
+            </p>
+            <div className="grid grid-cols-2 gap-3 max-w-md">
+              {project.videos.map((video) => (
+                <div
+                  key={video.src}
+                  className="relative aspect-[2/3] rounded-sm overflow-hidden border border-border bg-surface"
+                >
+                  <video
+                    src={video.src}
+                    poster={video.poster}
+                    aria-label={video.alt}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {/* Photography gallery */}
         {project.images && project.images.length > 0 ? (
           <div className="mb-16">
             <p className="font-mono text-xs text-text-dim mb-1">
               // the brand
             </p>
             <p className="text-text-muted text-sm mb-6">
-              Real photography from the site, not screenshots — full-page
-              captures aren&apos;t available for this one yet.
+              {project.imagesCaption ??
+                "Real photography from the site, not screenshots — full-page captures aren't available for this one yet."}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {project.images.map((image) => (
@@ -258,37 +368,6 @@ export default async function WorkDetailPage(props: {
                   </p>
                 </div>
               ))}
-            </div>
-          </div>
-        ) : null}
-
-        {/* Channels */}
-        {project.channels && project.channels.length > 0 ? (
-          <div className="mb-14">
-            <p className="font-mono text-xs text-text-dim mb-3">
-              // what I manage · {project.channels.length} channels
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {project.channels.map((channel) =>
-                channel.url ? (
-                  <a
-                    key={channel.label}
-                    href={channel.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-mono text-xs text-text-2 border border-border px-2 py-1 rounded-sm hover:border-border-strong hover:text-accent transition-colors"
-                  >
-                    {channel.label}
-                  </a>
-                ) : (
-                  <span
-                    key={channel.label}
-                    className="font-mono text-xs text-text-dim border border-border px-2 py-1 rounded-sm"
-                  >
-                    {channel.label}
-                  </span>
-                )
-              )}
             </div>
           </div>
         ) : null}
